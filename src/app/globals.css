@@ -7,3 +7,18 @@ html, body{
 *{
   box-sizing: border-box;
 }
+
+@keyframes scrollCharacters {
+  0% {
+    transform: translateY(8%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+.animate-scrollCharacters {
+  animation: scrollCharacters 120s linear infinite;
+  will-change: transform;
+  transform: translateY(100%);
+}

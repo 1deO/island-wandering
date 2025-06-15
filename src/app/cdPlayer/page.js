@@ -159,7 +159,7 @@ export default function CdPlayer() {
           {displayText.split('').map((char, index) => (
             <div key={index} className="h-[44px] w-[44px] flex items-center justify-center overflow-hidden box-border">
               <div className="w-full h-full flex items-center justify-center">
-                {char}
+              {char}
               </div>
             </div>
           ))}
@@ -173,13 +173,13 @@ export default function CdPlayer() {
           className="w-[50%] h-full bg-gray-200 flex items-center justify-center select-none relative overflow-hidden"
         >
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-150">
-            <Image
-              src="/cd-black.png"
+          <Image
+            src="/cd-black.png"
               width={1000}
               height={1000}
-              alt="cdPlayer"
-            />
-          </div>
+            alt="cdPlayer"
+          />
+        </div>
           {currentArea === 'player' && ( //player
             <DraggableCover 
               isPlaying={isPlaying} 
@@ -202,14 +202,14 @@ export default function CdPlayer() {
                     fs: 0,
                     modestbranding: 1,
                     rel: 0,
-                  }
+                  },
                 }}
               />
             )}
-          </div>
+        </div>
         </DroppableArea>
 
-        {/* 台灣地圖 */}
+      {/* 台灣地圖 */}
         <DroppableArea 
           id="taiwan" 
           className="w-[38%] h-full bg-gray-400 flex justify-center items-center select-none relative"

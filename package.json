@@ -9,16 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-<<<<<<< HEAD
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/utilities": "^3.2.2",
     "firebase": "^11.9.1",
-=======
-    "firebase": "^11.9.1",
-
-    "@dnd-kit/core": "^6.3.1",
-    "@dnd-kit/utilities": "^3.2.2",
->>>>>>> cc669eeedcc5f9b84bcd0159cdc7151e4f3a442e
     "framer-motion": "^12.18.1",
     "googleapis": "^150.0.1",
     "gsap": "^3.13.0",

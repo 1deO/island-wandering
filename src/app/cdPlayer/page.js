@@ -50,8 +50,8 @@ function DraggableCover({ isPlaying, togglePlay, position, currentArea, hasStart
       <Image
         src="/kyujin.jpg"
         className="rounded-full"
-        width={360}
-        height={360}
+        width={currentArea === 'taiwan' ? 150 : 360}
+        height={currentArea === 'taiwan' ? 150 : 360}
         alt="cdCoverImg"
         draggable="true"
       />
@@ -73,7 +73,7 @@ export default function CdPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [coverPosition, setCoverPosition] = useState({ x: '50%', y: '50%' });
   const [currentArea, setCurrentArea] = useState('taiwan');
-<<<<<<< HEAD
+
   const [showYoutubePlayer, setShowYoutubePlayer] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
@@ -96,7 +96,7 @@ export default function CdPlayer() {
       setCurrentVideoIndex(0);
     }
   };
-=======
+
   const [currentVideo, setCurrentVideo] = useState(null);
   const [musicList, setMusicList] = useState([]);
   const [currentMusicIndex, setCurrentMusicIndex] = useState(0);
@@ -136,7 +136,7 @@ export default function CdPlayer() {
       currentVideo.pauseVideo();
     }
   }
->>>>>>> cc669eeedcc5f9b84bcd0159cdc7151e4f3a442e
+
 
   const handleDragEnd = (event) => {
     const { over } = event;
@@ -148,8 +148,8 @@ export default function CdPlayer() {
         setHasStarted(false);
         setIsPlaying(false);
       } else if (over.id === 'taiwan') {
-        setCurrentArea('taiwan');
-        setCoverPosition({ x: '50%', y: '50%' });
+        setCurrentArea('taiwan')
+        setCoverPosition({ x: '30%', y: '90%' });
         if (isPlaying) {
           togglePlay();
         }

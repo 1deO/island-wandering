@@ -50,8 +50,8 @@ function DraggableCover({ isPlaying, togglePlay, position, currentArea, hasStart
       <Image
         src="/kyujin.jpg"
         className="rounded-full"
-        width={360}
-        height={360}
+        width={currentArea === 'taiwan' ? 150 : 360}
+        height={currentArea === 'taiwan' ? 150 : 360}
         alt="cdCoverImg"
         draggable="true"
       />
@@ -71,8 +71,9 @@ function DroppableArea({ id, children, className }) {
 
 export default function CdPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [coverPosition, setCoverPosition] = useState({ x: '50%', y: '50%' });
+  const [coverPosition, setCoverPosition] = useState({ x: '45%', y: '90%' });
   const [currentArea, setCurrentArea] = useState('taiwan');
+<<<<<<< HEAD
   const [showYoutubePlayer, setShowYoutubePlayer] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [currentMusicIndex, setCurrentMusicIndex] = useState(0);
@@ -120,6 +121,47 @@ export default function CdPlayer() {
       setCurrentVideoIndex(0);
     }
   };
+=======
+  const [currentVideo, setCurrentVideo] = useState(null);
+  const [musicList, setMusicList] = useState([]);
+  const [currentMusicIndex, setCurrentMusicIndex] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
+
+  useEffect(() => {
+    const fetchMusicData = async () => {
+      try {
+        const response = await fetch('/api/music');
+        const data = await response.json();
+        if (data.musicList) {
+          setMusicList(data.musicList);
+        }
+      } catch (error) {
+        console.error('Error fetching music data:', error);
+      }
+    };
+
+    fetchMusicData();
+    // 每5分鐘更新一次數據
+    const interval = setInterval(fetchMusicData, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const videoReady = (event) => {
+    setCurrentVideo(event.target);
+  }
+
+  const play = () => {
+    if(currentVideo) {
+      currentVideo.playVideo();
+    }
+  }
+
+  const pause = () => {
+    if(currentVideo) {
+      currentVideo.pauseVideo();
+    }
+  }
+>>>>>>> cc669eeedcc5f9b84bcd0159cdc7151e4f3a442e
 
   const handleDragEnd = (event) => {
     const { over } = event;
@@ -127,12 +169,12 @@ export default function CdPlayer() {
     if (over) {
       if (over.id === 'cd-player') {
         setCurrentArea('player');
-        setCoverPosition({ x: '27%', y: '22.5%' });
+        setCoverPosition({ x: '27%', y: '27.5%' });
         setHasStarted(false);
         setIsPlaying(false);
       } else if (over.id === 'taiwan') {
-        setCurrentArea('taiwan');
-        setCoverPosition({ x: '50%', y: '50%' });
+        setCurrentArea('taiwan')
+        setCoverPosition({ x: '45%', y: '90%' });
         if (isPlaying) {
           togglePlay();
         }

@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from "next/image";
 import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
 import YouTube from 'react-youtube';
 
-function DraggableCover({ isPlaying, togglePlay, position, currentArea }) {
+function DraggableCover({ isPlaying, togglePlay, position, currentArea, hasStarted }) {
   const { attributes, listeners, setNodeRef } = useDraggable({ id: 'cd-cover' });
   const [isDragging, setIsDragging] = useState(false);
 
@@ -45,7 +45,7 @@ function DraggableCover({ isPlaying, togglePlay, position, currentArea }) {
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
-      className={`cursor-pointer ${isPlaying ? 'animate-spin-slow' : ''}`}
+      className={`cursor-pointer ${isPlaying && hasStarted ? 'animate-spin-slow' : ''}`}
     >
       <Image
         src="/kyujin.jpg"
@@ -70,10 +70,10 @@ function DroppableArea({ id, children, className }) {
 }
 
 export default function CdPlayer() {
-  const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [coverPosition, setCoverPosition] = useState({ x: '50%', y: '50%' });
   const [currentArea, setCurrentArea] = useState('taiwan');
+<<<<<<< HEAD
   const [showYoutubePlayer, setShowYoutubePlayer] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
@@ -96,6 +96,47 @@ export default function CdPlayer() {
       setCurrentVideoIndex(0);
     }
   };
+=======
+  const [currentVideo, setCurrentVideo] = useState(null);
+  const [musicList, setMusicList] = useState([]);
+  const [currentMusicIndex, setCurrentMusicIndex] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
+
+  useEffect(() => {
+    const fetchMusicData = async () => {
+      try {
+        const response = await fetch('/api/music');
+        const data = await response.json();
+        if (data.musicList) {
+          setMusicList(data.musicList);
+        }
+      } catch (error) {
+        console.error('Error fetching music data:', error);
+      }
+    };
+
+    fetchMusicData();
+    // 每5分鐘更新一次數據
+    const interval = setInterval(fetchMusicData, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const videoReady = (event) => {
+    setCurrentVideo(event.target);
+  }
+
+  const play = () => {
+    if(currentVideo) {
+      currentVideo.playVideo();
+    }
+  }
+
+  const pause = () => {
+    if(currentVideo) {
+      currentVideo.pauseVideo();
+    }
+  }
+>>>>>>> cc669eeedcc5f9b84bcd0159cdc7151e4f3a442e
 
   const handleDragEnd = (event) => {
     const { over } = event;
@@ -104,9 +145,8 @@ export default function CdPlayer() {
       if (over.id === 'cd-player') {
         setCurrentArea('player');
         setCoverPosition({ x: '27%', y: '22.5%' });
-        if (!isPlaying) {
-          togglePlay();
-        }
+        setHasStarted(false);
+        setIsPlaying(false);
       } else if (over.id === 'taiwan') {
         setCurrentArea('taiwan');
         setCoverPosition({ x: '50%', y: '50%' });
@@ -118,15 +158,13 @@ export default function CdPlayer() {
   };
 
   const togglePlay = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
     if (isPlaying) {
-      audio.pause();
+      pause();
     } else {
-      audio.play().catch(() => {});
+      play();
     }
     setIsPlaying(!isPlaying);
+    setHasStarted(true);
   };
 
   const messages = [
@@ -138,14 +176,16 @@ export default function CdPlayer() {
   const displayText = [...messages, ...messages, ...messages].join('');
 
   return (
-    <div className="w-full h-screen flex gap-8 bg-white justify-center items-center">
+    <div className="w-full h-screen flex gap-6 bg-white justify-center items-center">
       {/* 跑馬燈 */}
-      <div className="w-[6%] h-[100vh] bg-amber-300 overflow-hidden relative text-white 
-      text-[36px] text-shadow-black/10 text-shadow-lg leading-none select-none">
+      <div className="w-[6%] min-w-[56px] h-[100vh] overflow-hidden relative text-white 
+      text-[36px] px-1 text-shadow-black text-shadow-lg leading-none select-none justify-center items-center">
         <div className="absolute animate-scrollCharacters">
           {displayText.split('').map((char, index) => (
-            <div key={index} className="h-[44px] w-[100%] min-w-[44px] flex p-2 items-center justify-center">
+            <div key={index} className="h-[44px] w-[44px] flex items-center justify-center overflow-hidden box-border">
+              <div className="w-full h-full flex items-center justify-center">
               {char}
+              </div>
             </div>
           ))}
         </div>
@@ -158,25 +198,44 @@ export default function CdPlayer() {
           className="w-[50%] h-full bg-gray-200 flex items-center justify-center select-none relative overflow-hidden"
         >
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-150">
-            <Image
-              src="/cd-black.png"
+          <Image
+            src="/cd-black.png"
               width={1000}
               height={1000}
-              alt="cdPlayer"
-            />
-          </div>
+            alt="cdPlayer"
+          />
+        </div>
           {currentArea === 'player' && ( //player
             <DraggableCover 
               isPlaying={isPlaying} 
               togglePlay={togglePlay} 
               position={coverPosition}
               currentArea={currentArea}
+              hasStarted={hasStarted}
             />
           )}
-          <audio ref={audioRef} src="/audio.mp3" loop />
+          <div className="hidden">
+            {musicList.length > 0 && (
+              <YouTube 
+                videoId={musicList[currentMusicIndex]?.videoId}
+                onReady={videoReady}
+                opts={{
+                  playerVars: {
+                    autoplay: 0,
+                    controls: 0,
+                    disablekb: 1,
+                    fs: 0,
+                    modestbranding: 1,
+                    rel: 0,
+                    loop: 1,
+                  },
+                }}
+              />
+            )}
+        </div>
         </DroppableArea>
 
-        {/* 台灣地圖 */}
+      {/* 台灣地圖 */}
         <DroppableArea 
           id="taiwan" 
           className="w-[38%] h-full bg-white bg-[url('/taiwan.png')] bg-cover bg-center flex justify-center items-center select-none relative"
@@ -187,6 +246,7 @@ export default function CdPlayer() {
               togglePlay={togglePlay} 
               position={coverPosition}
               currentArea={currentArea}
+              hasStarted={hasStarted}
             />
           )}
           {/* 三個圖片 */}

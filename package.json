@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "firebase": "^11.9.1",
     "framer-motion": "^12.18.1",
     "gsap": "^3.13.0",
     "mapbox-gl": "^3.12.0",

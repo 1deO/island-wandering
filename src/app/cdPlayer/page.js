@@ -202,6 +202,7 @@ export default function CdPlayer() {
                     fs: 0,
                     modestbranding: 1,
                     rel: 0,
+                    loop: 1,
                   },
                 }}
               />

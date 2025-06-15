@@ -71,7 +71,7 @@ function DroppableArea({ id, children, className }) {
 
 export default function CdPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [coverPosition, setCoverPosition] = useState({ x: '50%', y: '50%' });
+  const [coverPosition, setCoverPosition] = useState({ x: '45%', y: '90%' });
   const [currentArea, setCurrentArea] = useState('taiwan');
 
   const [showYoutubePlayer, setShowYoutubePlayer] = useState(false);
@@ -144,12 +144,12 @@ export default function CdPlayer() {
     if (over) {
       if (over.id === 'cd-player') {
         setCurrentArea('player');
-        setCoverPosition({ x: '27%', y: '22.5%' });
+        setCoverPosition({ x: '27%', y: '27.5%' });
         setHasStarted(false);
         setIsPlaying(false);
       } else if (over.id === 'taiwan') {
         setCurrentArea('taiwan')
-        setCoverPosition({ x: '30%', y: '90%' });
+        setCoverPosition({ x: '45%', y: '90%' });
         if (isPlaying) {
           togglePlay();
         }

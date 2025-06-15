@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import Image from "next/image";
 import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
+import YouTube from 'react-youtube';
 
 function DraggableCover({ isPlaying, togglePlay, position, currentArea }) {
   const { attributes, listeners, setNodeRef } = useDraggable({ id: 'cd-cover' });
@@ -73,6 +74,28 @@ export default function CdPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [coverPosition, setCoverPosition] = useState({ x: '50%', y: '50%' });
   const [currentArea, setCurrentArea] = useState('taiwan');
+  const [showYoutubePlayer, setShowYoutubePlayer] = useState(false);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+
+  const taipeiVideos = [
+    'iV8JDbtXZm4', // 台北的天空
+    '9plPMDcD4dU', // 台北的街頭
+    'i3Cp6Mbj78w', // 台北的夜
+  ];
+
+  const handleTaipeiClick = () => {
+    setShowYoutubePlayer(true);
+    setCurrentVideoIndex(0);
+  };
+
+  const handleVideoEnd = () => {
+    if (currentVideoIndex < taipeiVideos.length - 1) {
+      setCurrentVideoIndex(currentVideoIndex + 1);
+    } else {
+      setShowYoutubePlayer(false);
+      setCurrentVideoIndex(0);
+    }
+  };
 
   const handleDragEnd = (event) => {
     const { over } = event;
@@ -156,7 +179,7 @@ export default function CdPlayer() {
         {/* 台灣地圖 */}
         <DroppableArea 
           id="taiwan" 
-          className="w-[38%] h-full bg-gray-400 flex justify-center items-center select-none relative"
+          className="w-[38%] h-full bg-white bg-[url('/taiwan.png')] bg-cover bg-center flex justify-center items-center select-none relative"
         >
           {currentArea === 'taiwan' && (
             <DraggableCover 
@@ -165,6 +188,76 @@ export default function CdPlayer() {
               position={coverPosition}
               currentArea={currentArea}
             />
+          )}
+          {/* 三個圖片 */}
+          {/* 台北 */}
+          <div 
+            className="absolute top-[2%] left-[50%] w-[300px] h-[300px] cursor-pointer"
+            onClick={handleTaipeiClick}
+          >
+            <Image src="/taipei.png" alt="台北" width={150} height={150} />
+          </div>
+          <div className="absolute top-[25%] left-[20%] w-[300px] h-[300px] cursor-pointer">
+            <Image src="/temple.png" alt="台中" width={150} height={150} />
+          </div>
+          <div className="absolute top-[55%] left-[15%] w-[300px] h-[300px] cursor-pointer">
+            <Image src="/kaohsiung.png" alt="高雄" width={150} height={150} />
+          </div>
+
+          {showYoutubePlayer && (
+            <div className="fixed top-0 left-0 w-full h-full bg-black/50 backdrop-blur-md z-[9999] flex items-center justify-center animate-fadeIn">
+              <div className="relative w-[800px] h-[450px] bg-gradient-to-br from-orange-900 to-yellow-800 rounded-2xl shadow-2xl transform transition-all duration-300 hover:scale-[1.02] border border-gray-700">
+                <button 
+                  className="absolute -top-16 right-0 text-white text-xl bg-orange-500 hover:bg-yellow-500 px-6 py-3 rounded-full transition-all duration-300 hover:scale-110 flex items-center gap-2 shadow-lg"
+                  onClick={() => setShowYoutubePlayer(false)}
+                >
+                  
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  </svg>
+                </button>
+                <div className="p-6">
+                  <YouTube
+                    videoId={taipeiVideos[currentVideoIndex]}
+                    opts={{
+                      width: '100%',
+                      height: '400px',
+                      playerVars: {
+                        autoplay: 1,
+                        modestbranding: 1,
+                        rel: 0,
+                      },
+                    }}
+                    onEnd={handleVideoEnd}
+                    className="rounded-xl shadow-2xl"
+                  />
+                </div>
+                {/* 控制面板 */}
+                <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 flex items-center gap-6">
+                  <button 
+                    onClick={() => setCurrentVideoIndex(prev => (prev > 0 ? prev - 1 : taipeiVideos.length - 1))}
+                    className="bg-orange-600 hover:bg-yellow-500 text-white px-6 py-3 rounded-full transition-all duration-300 hover:scale-110 flex items-center gap-2 shadow-lg"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                   
+                  </button>
+                  <div className="bg-white/95 backdrop-blur-sm px-12 py-3 rounded-full text-gray-800 font-medium shadow-lg">
+                    第 {currentVideoIndex + 1} 首 / 共 {taipeiVideos.length} 首
+                  </div>
+                  <button 
+                    onClick={() => setCurrentVideoIndex(prev => (prev < taipeiVideos.length - 1 ? prev + 1 : 0))}
+                    className="bg-orange-600 hover:bg-yellow-500 text-white px-6 py-3 rounded-full transition-all duration-300 hover:scale-110 flex items-center gap-2 shadow-lg"
+                  >
+                    
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
         </DroppableArea>
       </DndContext>

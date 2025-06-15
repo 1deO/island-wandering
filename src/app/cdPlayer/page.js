@@ -73,9 +73,33 @@ export default function CdPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [coverPosition, setCoverPosition] = useState({ x: '50%', y: '50%' });
   const [currentArea, setCurrentArea] = useState('taiwan');
-<<<<<<< HEAD
   const [showYoutubePlayer, setShowYoutubePlayer] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [currentMusicIndex, setCurrentMusicIndex] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
+  const [player, setPlayer] = useState(null);
+
+  const musicList = [
+    { videoId: 'iV8JDbtXZm4', title: '台北的天空' },
+    { videoId: '9plPMDcD4dU', title: '台北的街頭' },
+    { videoId: 'i3Cp6Mbj78w', title: '台北的夜' },
+  ];
+
+  const videoReady = (event) => {
+    setPlayer(event.target);
+  };
+
+  const play = () => {
+    if (player) {
+      player.playVideo();
+    }
+  };
+
+  const pause = () => {
+    if (player) {
+      player.pauseVideo();
+    }
+  };
 
   const taipeiVideos = [
     'iV8JDbtXZm4', // 台北的天空
@@ -96,47 +120,6 @@ export default function CdPlayer() {
       setCurrentVideoIndex(0);
     }
   };
-=======
-  const [currentVideo, setCurrentVideo] = useState(null);
-  const [musicList, setMusicList] = useState([]);
-  const [currentMusicIndex, setCurrentMusicIndex] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false);
-
-  useEffect(() => {
-    const fetchMusicData = async () => {
-      try {
-        const response = await fetch('/api/music');
-        const data = await response.json();
-        if (data.musicList) {
-          setMusicList(data.musicList);
-        }
-      } catch (error) {
-        console.error('Error fetching music data:', error);
-      }
-    };
-
-    fetchMusicData();
-    // 每5分鐘更新一次數據
-    const interval = setInterval(fetchMusicData, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const videoReady = (event) => {
-    setCurrentVideo(event.target);
-  }
-
-  const play = () => {
-    if(currentVideo) {
-      currentVideo.playVideo();
-    }
-  }
-
-  const pause = () => {
-    if(currentVideo) {
-      currentVideo.pauseVideo();
-    }
-  }
->>>>>>> cc669eeedcc5f9b84bcd0159cdc7151e4f3a442e
 
   const handleDragEnd = (event) => {
     const { over } = event;

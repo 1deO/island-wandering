@@ -73,7 +73,7 @@ export default function CdPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [coverPosition, setCoverPosition] = useState({ x: '45%', y: '90%' });
   const [currentArea, setCurrentArea] = useState('taiwan');
-
+//test
   const [showYoutubePlayer, setShowYoutubePlayer] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 

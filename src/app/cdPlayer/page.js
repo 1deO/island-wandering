@@ -73,6 +73,10 @@ export default function CdPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [coverPosition, setCoverPosition] = useState({ x: '45%', y: '90%' });
   const [currentArea, setCurrentArea] = useState('taiwan');
+<<<<<<< HEAD
+=======
+//test
+>>>>>>> 75e5f76447b6521fff49704b5038e12394979ede
   const [showYoutubePlayer, setShowYoutubePlayer] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [currentCity, setCurrentCity] = useState('taipei');
@@ -197,7 +201,11 @@ export default function CdPlayer() {
 
   const messages = [
     "本日推薦單曲︽國境之南︾，來自電影︽海角七號︾，由嚴云農作詞，范逸臣演唱。榮獲第４５屆金馬獎最佳原創電影歌曲。歌詞創作靈感來自電影︽海角七號︾，故事背景即位於臺灣南端的恆春，描寫跨越時代的愛情記憶。",
+<<<<<<< HEAD
     "敬請鎖定︻島嶼漫遊音樂台︼，為您帶來適合夏日的浪漫臺灣歌曲。",
+=======
+    "敬請鎖定︻島嶼漫遊︼，帶你用耳朵旅行，一起聽見島的心跳。",
+>>>>>>> 75e5f76447b6521fff49704b5038e12394979ede
   ];
 
   const displayText = [...messages, ...messages, ...messages].join('');

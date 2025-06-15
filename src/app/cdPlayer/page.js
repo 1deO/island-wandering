@@ -48,7 +48,7 @@ function DraggableCover({ isPlaying, togglePlay, position, currentArea, hasStart
       className={`cursor-pointer ${isPlaying && hasStarted ? 'animate-spin-slow' : ''}`}
     >
       <Image
-        src="/kyujin.jpg"
+        src="/south.png"
         className="rounded-full"
         width={currentArea === 'taiwan' ? 150 : 360}
         height={currentArea === 'taiwan' ? 150 : 360}
@@ -73,34 +73,9 @@ export default function CdPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [coverPosition, setCoverPosition] = useState({ x: '45%', y: '90%' });
   const [currentArea, setCurrentArea] = useState('taiwan');
-<<<<<<< HEAD
   const [showYoutubePlayer, setShowYoutubePlayer] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [currentMusicIndex, setCurrentMusicIndex] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false);
-  const [player, setPlayer] = useState(null);
-
-  const musicList = [
-    { videoId: 'iV8JDbtXZm4', title: '台北的天空' },
-    { videoId: '9plPMDcD4dU', title: '台北的街頭' },
-    { videoId: 'i3Cp6Mbj78w', title: '台北的夜' },
-  ];
-
-  const videoReady = (event) => {
-    setPlayer(event.target);
-  };
-
-  const play = () => {
-    if (player) {
-      player.playVideo();
-    }
-  };
-
-  const pause = () => {
-    if (player) {
-      player.pauseVideo();
-    }
-  };
+  const [currentCity, setCurrentCity] = useState('taipei');
 
   const taipeiVideos = [
     'iV8JDbtXZm4', // 台北的天空
@@ -108,20 +83,48 @@ export default function CdPlayer() {
     'i3Cp6Mbj78w', // 台北的夜
   ];
 
+  const taichungVideos = [
+    'Xgjny7YFMD4', // 鹿港小鎮
+    'djJxsJkbMq0', // 台中市市政府
+    'vHwjYICfXwI', // 新竹風
+  ];
+
+  const kaohsiungClickVideos = [
+    'IscwD0kENpA', //宇宙人：來去高雄
+    'gBSTVxE0t6o', // 芒果醬：愛河
+    '6Cyaef8Zozw', // 黃明志【出去走走】
+  ];
+
   const handleTaipeiClick = () => {
+    setCurrentCity('taipei');
+    setShowYoutubePlayer(true);
+    setCurrentVideoIndex(0);
+  };
+
+  const handleTaichungClick = () => {
+    setCurrentCity('taichung');
+    setShowYoutubePlayer(true);
+    setCurrentVideoIndex(0);
+  };
+
+  const handleKaohsiungClick = () => {
+    setCurrentCity('kaohsiung');
     setShowYoutubePlayer(true);
     setCurrentVideoIndex(0);
   };
 
   const handleVideoEnd = () => {
-    if (currentVideoIndex < taipeiVideos.length - 1) {
+    const currentVideos = currentCity === 'taipei' ? taipeiVideos : 
+                         currentCity === 'taichung' ? taichungVideos :
+                         kaohsiungClickVideos;
+    if (currentVideoIndex < currentVideos.length - 1) {
       setCurrentVideoIndex(currentVideoIndex + 1);
     } else {
       setShowYoutubePlayer(false);
       setCurrentVideoIndex(0);
     }
   };
-=======
+
   const [currentVideo, setCurrentVideo] = useState(null);
   const [musicList, setMusicList] = useState([]);
   const [currentMusicIndex, setCurrentMusicIndex] = useState(0);
@@ -161,7 +164,7 @@ export default function CdPlayer() {
       currentVideo.pauseVideo();
     }
   }
->>>>>>> cc669eeedcc5f9b84bcd0159cdc7151e4f3a442e
+
 
   const handleDragEnd = (event) => {
     const { over } = event;
@@ -193,18 +196,17 @@ export default function CdPlayer() {
   };
 
   const messages = [
-    "每週四晚上７點，﹁圭師傅好驚奇﹂就在恩米克斯電視台，期待與您在空中相會。",
-    "原定本日播放之︻猜猜今晚幾點睡︼因不可抗力因素臨時取消，下次請早睡。",
-    "︻大展鴻圖︼銀龍魚親手提筆字，阿叔都點頭，有料。",
+    "本日推薦單曲︽國境之南︾，來自電影︽海角七號︾，由嚴云農作詞，范逸臣演唱。榮獲第４５屆金馬獎最佳原創電影歌曲。歌詞創作靈感來自電影︽海角七號︾，故事背景即位於臺灣南端的恆春，描寫跨越時代的愛情記憶。",
+    "敬請鎖定︻島嶼漫遊音樂台︼，為您帶來適合夏日的浪漫臺灣歌曲。",
   ];
 
   const displayText = [...messages, ...messages, ...messages].join('');
 
   return (
-    <div className="w-full h-screen flex gap-6 bg-white justify-center items-center">
+    <div className="w-full h-screen flex gap-6 bg-gradient-to-br from-yellow-100 via-yellow-400 to-orange-400 justify-center items-center">
       {/* 跑馬燈 */}
-      <div className="w-[6%] min-w-[56px] h-[100vh] overflow-hidden relative text-white 
-      text-[36px] px-1 text-shadow-black text-shadow-lg leading-none select-none justify-center items-center">
+      <div className="w-[6%] min-w-[56px] h-[100vh] overflow-hidden relative text-white ml-5
+      text-[36px] px-1 font-bold text-shadow-black text-shadow-lg leading-none select-none justify-center items-center">
         <div className="absolute animate-scrollCharacters">
           {displayText.split('').map((char, index) => (
             <div key={index} className="h-[44px] w-[44px] flex items-center justify-center overflow-hidden box-border">
@@ -220,16 +222,19 @@ export default function CdPlayer() {
       <DndContext onDragEnd={handleDragEnd}>
         <DroppableArea 
           id="cd-player" 
-          className="w-[50%] h-full bg-gray-200 flex items-center justify-center select-none relative overflow-hidden"
+          className="w-[50%] h-full flex items-center justify-center select-none relative overflow-hidden"
         >
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scale-150">
-          <Image
-            src="/cd-black.png"
+            <Image
+              src="/cd-black.png"
               width={1000}
               height={1000}
-            alt="cdPlayer"
-          />
-        </div>
+              alt="cdPlayer"
+            />
+            <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 z-[50]">
+              <div className="bg-gray-600 w-[15px] h-[140px] transform -rotate-45 origin-bottom rounded-2xl"></div>
+            </div>
+          </div>
           {currentArea === 'player' && ( //player
             <DraggableCover 
               isPlaying={isPlaying} 
@@ -263,7 +268,7 @@ export default function CdPlayer() {
       {/* 台灣地圖 */}
         <DroppableArea 
           id="taiwan" 
-          className="w-[38%] h-full bg-white bg-[url('/taiwan.png')] bg-cover bg-center flex justify-center items-center select-none relative"
+          className="w-[38%] h-full bg-[url('/taiwan.png')] bg-cover bg-center flex justify-center items-center select-none relative"
         >
           {currentArea === 'taiwan' && (
             <DraggableCover 
@@ -282,11 +287,14 @@ export default function CdPlayer() {
           >
             <Image src="/taipei.png" alt="台北" width={150} height={150} />
           </div>
-          <div className="absolute top-[25%] left-[20%] w-[300px] h-[300px] cursor-pointer">
-            <Image src="/temple.png" alt="台中" width={150} height={150} />
+          <div 
+          className="absolute top-[25%] left-[20%] w-[300px] h-[300px] cursor-pointer"
+          onClick={handleTaichungClick}>
+            <Image src="/wind.png" alt="台中" width={150} height={150} />
           </div>
-          <div className="absolute top-[55%] left-[15%] w-[300px] h-[300px] cursor-pointer">
-            <Image src="/kaohsiung.png" alt="高雄" width={150} height={150} />
+          <div className="absolute top-[55%] left-[15%] w-[300px] h-[300px] cursor-pointer"
+           onClick={handleKaohsiungClick}>
+            <Image src="/temple.png" alt="高雄" width={150} height={150} />
           </div>
 
           {showYoutubePlayer && (
@@ -303,7 +311,9 @@ export default function CdPlayer() {
                 </button>
                 <div className="p-6">
                   <YouTube
-                    videoId={taipeiVideos[currentVideoIndex]}
+                    videoId={currentCity === 'taipei' ? taipeiVideos[currentVideoIndex] : 
+                           currentCity === 'taichung' ? taichungVideos[currentVideoIndex] :
+                           kaohsiungClickVideos[currentVideoIndex]}
                     opts={{
                       width: '100%',
                       height: '400px',
@@ -320,7 +330,7 @@ export default function CdPlayer() {
                 {/* 控制面板 */}
                 <div className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 flex items-center gap-6">
                   <button 
-                    onClick={() => setCurrentVideoIndex(prev => (prev > 0 ? prev - 1 : taipeiVideos.length - 1))}
+                    onClick={() => setCurrentVideoIndex(prev => (prev > 0 ? prev - 1 : currentCity === 'taipei' ? taipeiVideos.length - 1 : currentCity === 'taichung' ? taichungVideos.length - 1 : kaohsiungClickVideos.length - 1))}
                     className="bg-orange-600 hover:bg-yellow-500 text-white px-6 py-3 rounded-full transition-all duration-300 hover:scale-110 flex items-center gap-2 shadow-lg"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -329,10 +339,12 @@ export default function CdPlayer() {
                    
                   </button>
                   <div className="bg-white/95 backdrop-blur-sm px-12 py-3 rounded-full text-gray-800 font-medium shadow-lg">
-                    第 {currentVideoIndex + 1} 首 / 共 {taipeiVideos.length} 首
+                    第 {currentVideoIndex + 1} 首 / 共 {currentCity === 'taipei' ? taipeiVideos.length : 
+                                                      currentCity === 'taichung' ? taichungVideos.length :
+                                                      kaohsiungClickVideos.length} 首
                   </div>
                   <button 
-                    onClick={() => setCurrentVideoIndex(prev => (prev < taipeiVideos.length - 1 ? prev + 1 : 0))}
+                    onClick={() => setCurrentVideoIndex(prev => (prev < (currentCity === 'taipei' ? taipeiVideos.length - 1 : currentCity === 'taichung' ? taichungVideos.length - 1 : kaohsiungClickVideos.length - 1) ? prev + 1 : 0))}
                     className="bg-orange-600 hover:bg-yellow-500 text-white px-6 py-3 rounded-full transition-all duration-300 hover:scale-110 flex items-center gap-2 shadow-lg"
                   >
                     

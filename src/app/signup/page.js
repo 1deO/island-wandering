@@ -1,16 +1,19 @@
+
 "use client";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import Image from 'next/image';
 import Link from "next/link";
+import React,{ FormEvent, useState } from "react";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { app } from "../firebase/config";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
   const router = useRouter();
 
-  const [name, setName] = useState("");
-  const [gender, setGender] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [name, setName] = useState("島民01");
+  const [gender, setGender] = useState("girl");
+  const [email, setEmail] = useState("user@gmail.com");
+  const [password, setPassword] = useState("123456");
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -18,7 +21,7 @@ export default function SignUp() {
 
   const isFormValid = name && gender && email && password;
 
-  const handleNext = async () => {
+  const handleNext = async (e) => {
     e.preventDefault();
     setEmailError("");
     setPasswordError("");
@@ -186,6 +189,7 @@ export default function SignUp() {
               >
                 已有會員帳號？
               </Link>
+              <Link href="/login">
               <button
                 type="submit"
                 disabled={!isFormValid}
@@ -197,6 +201,7 @@ export default function SignUp() {
               >
                 註冊
               </button>
+              </Link>
             </div>
           </form>
         </div>

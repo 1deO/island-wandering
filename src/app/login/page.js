@@ -2,17 +2,17 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import GoogleAuth from "../../app/component/GoogleAuth"
-// import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-// import firebaseApp from "../../app/database/auth";
 import Link from "next/link";
+import firebaseApp from "../firebase/config";
 
 export default function Login() {
   const router = useRouter();
-//   const auth = getAuth(firebaseApp);
+  const auth = getAuth(firebaseApp);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("user@gmail.com");
+  const [password, setPassword] = useState("123456");
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async () => {
@@ -22,35 +22,34 @@ export default function Login() {
       setErrorMessage("請輸入帳號與密碼");
       return;
     }
-     }
+     
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const idToken = await userCredential.user.getIdToken();
 
-//     try {
-//       const userCredential = await signInWithEmailAndPassword(
-//         auth,
-//         email,
-//         password
-//       );
-//       const idToken = await userCredential.user.getIdToken();
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: idToken }),
+      });
 
-//       const res = await fetch("/api/login", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify({ token: idToken }),
-//       });
-
-//       if (res.ok) {
-//         window.location.href = "/";
-//       } else {
-//         setErrorMessage("登入失敗，請稍後再試。");
-//       }
-//     } catch (error) {
-//       if (error.code === "auth/invalid-credential") {
-//         setErrorMessage("無效的帳號或密碼，請重新輸入。");
-//       } else {
-//         setErrorMessage(`登入錯誤：${error.message}`);
-//       }
-//     }
-//   };
+      if (res.ok) {
+        window.location.href = "/";
+      } else {
+        setErrorMessage("登入失敗，請稍後再試。");
+      }
+    } catch (error) {
+      if (error.code === "auth/invalid-credential") {
+        setErrorMessage("無效的帳號或密碼，請重新輸入。");
+      } else {
+        setErrorMessage(`登入錯誤：${error.message}`);
+      }
+    }
+  };
 
   const isFormValid = email.trim() !== "" && password.trim() !== "";
 
@@ -114,17 +113,19 @@ export default function Login() {
               >
                 還未有帳號？
               </Link>
-              <button
-                type="submit"
-                disabled={!isFormValid}
-                className={`px-5 text-center py-2 rounded-lg text-black transition ${
-                  isFormValid
-                    ? "bg-yellow-400 hover:bg-primary-blue1"
-                    : "bg-gray-400 text-white cursor-not-allowed"
-                }`}
-              >
-                立即登入
-              </button>
+              <Link href="/cdPlayer">
+                <div
+                  type="submit"
+                  disabled={!isFormValid}
+                  className={`px-5 text-center py-2 rounded-lg text-black transition ${
+                    isFormValid
+                      ? "bg-yellow-400 hover:bg-primary-blue1"
+                      : "bg-gray-400 text-white cursor-not-allowed"
+                  }`}
+                >
+                  立即登入
+                </div>
+              </Link>
             </div>
           </form>
         </div>

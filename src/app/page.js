@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image";
-import CircularText from "./component/CircularText"
+import CircularText from "component/CircularText"
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 

@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import GoogleAuth from "../component/GoogleAuth"
+import GoogleAuth from "../component/GoogleAuth";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import Link from "next/link";
